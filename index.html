@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Planner</title>
+<style>
+    body {
+        font-family: 'Garamond', serif;
+        margin: 0;
+        padding: 0;
+        background-color: #fdfdfd;
+    }
+    .container {
+        max-width: 600px;
+        margin: 100px auto;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        text-align: center;
+    }
+    h1, h2, p {
+        color: #7e4c7d;
+    }
+    h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+    }
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    .question {
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease forwards;
+    }
+    button {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        background-color: #ff9a8d;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    button:hover {
+        background-color: #ff726f;
+    }
+    .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        background-image: radial-gradient(rgba(255, 235, 205, 0.6), rgba(255, 192, 203, 0.6)),
+                          radial-gradient(rgba(255, 235, 205, 0.6), rgba(255, 192, 203, 0.6));
+        background-size: 150% 150%;
+        background-position: 50% 50%;
+        animation: pulse 10s ease infinite;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes pulse {
+        0% {
+            background-size: 150% 150%;
+        }
+        50% {
+            background-size: 160% 160%;
+        }
+        100% {
+            background-size: 150% 150%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="background-animation"></div>
+<div class="container">
+    <h1>Date Planner</h1>
+    <div class="question" id="question1">
+        <p>Would you like to start your date with dinner?</p>
+        <button onclick="nextQuestion('yes')">Yes, please!</button>
+        <button onclick="nextQuestion('no')">Not this time</button>
+    </div>
+    <div class="question" id="question2" style="display: none;">
+        <p>What type of cuisine do you prefer?</p>
+        <select id="cuisine">
+            <option value="Italian">Italian</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Indian">Indian</option>
+            <option value="American">American</option>
+            <option value="Other">Korean</option>
+            <option value="Other">Chinese</option>
+            <option value="Other">Vietnamese</option>
+            <option value="Other">Greece</option>
+            <option value="Other">Middle Eastern</option>
+            <option value="Other">Other</option>
+        </select>
+        <button onclick="nextQuestion('')">Next</button>
+    </div>
+    <div class="question" id="question3" style="display: none;">
+        <p>Would you like to go for a romantic walk after dinner?</p>
+        <button onclick="nextQuestion('yes')">Yes, please!</button>
+        <button onclick="nextQuestion('no')">Maybe next time</button>
+    </div>
+    <div class="question" id="question4" style="display: none;">
+        <p>Would you like to add dessert or coffee after the romantic walk?</p>
+        <button onclick="nextQuestion('yes')">Yes, please!</button>
+        <button onclick="nextQuestion('no')">Maybe next time</button>
+    </div>
+    <div id="planned-activities" style="display: none;">
+        <h2>Great! Here's your planned date:</h2>
+        <ul id="activities-list"></ul>
+    </div>
+</div>
+
+<script>
+    let currentQuestion = 1;
+    let activities = [];
+
+    function nextQuestion(answer) {
+        if (currentQuestion === 1) {
+            if (answer === 'yes') {
+                activities.push("Dinner at a cozy restaurant");
+                document.getElementById('question1').style.display = 'none';
+                document.getElementById('question2').style.display = 'block';
+                currentQuestion = 2;
+            } else {
+                document.getElementById('question1').style.display = 'none';
+                document.getElementById('question3').style.display = 'block';
+                currentQuestion = 3;
+            }
+        } else if (currentQuestion === 2) {
+            const cuisine = document.getElementById('cuisine').value;
+            activities.push("Cuisine: " + cuisine);
+            document.getElementById('question2').style.display = 'none';
+            document.getElementById('question3').style.display = 'block';
+            currentQuestion = 3;
+        } else if (currentQuestion === 3) {
+            if (answer === 'yes') {
+                activities.push("Romantic walk under the moonlight");
+                document.getElementById('question3').style.display = 'none';
+                document.getElementById('question4').style.display = 'block';
+                currentQuestion = 4;
+            } else {
+                document.getElementById('question3').style.display = 'none';
+                displayPlannedActivities();
+            }
+        } else if (currentQuestion === 4) {
+            if (answer === 'yes') {
+                activities.push("Dessert or coffee");
+            }
+            document.getElementById('question4').style.display = 'none';
+            displayPlannedActivities();
+        }
+    }
+
+    function displayPlannedActivities() {
+        document.getElementById('planned-activities').style.display = 'block';
+        const activitiesList = document.getElementById('activities-list');
+        activities.forEach(activity => {
+            const li = document.createElement('li');
+            li.textContent = activity;
+            activitiesList.appendChild(li);
+        });
+    }
+</script>
+
+</body>
+</html>
